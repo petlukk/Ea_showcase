@@ -2,6 +2,13 @@
 
 A desktop application showcasing [Eä](https://github.com/petlukk/E-), the SIMD kernel language, with real benchmark comparisons against NumPy and OpenCV.
 
+## Download & Install (Windows)
+
+1. Download `Ea-Performance-Showcase-Windows-x64.zip` from [Releases](https://github.com/petlukk/Ea_showcase/releases)
+2. Extract and run `Eä Performance Showcase.exe`
+
+No Python, no compiler, no dependencies — everything is bundled.
+
 ## Demos
 
 | Demo | Speedup | Category |
@@ -14,36 +21,29 @@ A desktop application showcasing [Eä](https://github.com/petlukk/E-), the SIMD 
 | Quantized Conv2D | **47.7×** vs NumPy | Quantized Kernel |
 | SIMD Reduction | **Beats optimized C** | Reduction Kernel |
 
-## Running
+Each demo runs a live benchmark on your machine — Eä SIMD kernel vs NumPy — and shows your actual speedup.
 
-### Windows (portable)
-Extract `Ea-Performance-Showcase-Windows-x64.zip` and run `Eä Performance Showcase.exe`.
+## How It Works
 
-### Linux
-```bash
-chmod +x "Eä Performance Showcase-1.0.0.AppImage"
-./"Eä Performance Showcase-1.0.0.AppImage"
+- **Eä kernels** are pre-compiled to native `.dll` files at build time and bundled with the app
+- **Python + NumPy** are embedded via PyInstaller — no installation needed
+- The benchmark runner loads the DLLs via `ctypes` and compares against NumPy on your CPU
+
+## Building from Source
+
+Requires: Windows 10/11 x64, Visual Studio 2022, LLVM 18 (MSVC build), Node.js, Python 3.9+
+
+```bat
+build-windows.bat
 ```
 
-## Live Benchmarks
+This builds `ea.exe`, pre-compiles all 7 kernels to DLLs, packages Python into `run_benchmark.exe`, and produces the installer in `dist\`.
 
-For live benchmark execution, install:
-```bash
-pip install numpy
-```
-
-For live Eä benchmarks (Eä compiler required):
-```bash
-cargo install --git https://github.com/petlukk/E- --tag v0.4.0
-```
-
-## Development
+### Dev Mode
 
 ```bash
 npm install
-npm run dev          # Development mode
-npm run build:linux  # Build Linux AppImage
-npm run build:win    # Build Windows (requires Wine on Linux)
+npm run dev
 ```
 
 ### Tech Stack
@@ -51,4 +51,4 @@ npm run build:win    # Build Windows (requires Wine on Linux)
 - **Tailwind CSS** dark theme with neon green accents
 - **Framer Motion** for animations
 - Custom SVG speedometer gauge
-- Python + ctypes for live Eä benchmark execution
+- Pre-compiled Eä SIMD kernels loaded via `ctypes`
