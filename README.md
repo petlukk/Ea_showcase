@@ -4,8 +4,10 @@ A desktop application showcasing [Eä](https://github.com/petlukk/E-), the SIMD 
 
 ## Download & Install (Windows)
 
-1. Download `Ea-Performance-Showcase-Windows-x64.zip` from [Releases](https://github.com/petlukk/Ea_showcase/releases)
+1. Download `Ea-Showcase-1.0.0-win-x64.zip` from [Releases](https://github.com/petlukk/Ea_showcase/releases)
 2. Extract and run `Eä Performance Showcase.exe`
+
+Or use the installer: `Ea-Showcase-Setup-1.0.0-x64.exe`
 
 No Python, no compiler, no dependencies — everything is bundled.
 
