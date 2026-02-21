@@ -1,0 +1,10 @@
+node_modules/
+out/
+dist/
+resources/ea.exe
+resources/run_benchmark.exe
+resources/kernels/
+.DS_Store
+*.log
+electron.vite.config.*.mjs
+__pycache__/

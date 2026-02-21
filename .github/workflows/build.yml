@@ -1,0 +1,101 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  # ─── Build native ea.exe on Windows, then package the Electron app ───────────
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Speed_UI
+        uses: actions/checkout@v4
+
+      - name: Install LLVM 18
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "18"
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ea-compiler
+
+      - name: Clone Eä compiler source
+        run: git clone --depth 1 https://github.com/petlukk/E- ea-compiler
+
+      - name: Build ea.exe
+        run: cargo build --release
+        working-directory: ea-compiler
+        env:
+          LLVM_SYS_180_PREFIX: ${{ env.LLVM_PATH }}
+
+      - name: Copy ea.exe to resources/
+        run: |
+          New-Item -ItemType Directory -Force -Path resources
+          Copy-Item ea-compiler\target\release\ea.exe resources\ea.exe
+        shell: pwsh
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Electron app (Windows)
+        run: npm run build:win
+        env:
+          # Disable code signing in CI
+          CSC_LINK: ''
+          CSC_KEY_PASSWORD: ''
+
+      - name: Upload NSIS installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: ea-showcase-windows-installer
+          path: dist/*.exe
+          if-no-files-found: warn
+
+      - name: Upload portable zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: ea-showcase-windows-portable
+          path: dist/*.zip
+          if-no-files-found: warn
+
+  # ─── Linux build (no ea bundling needed — users cargo install) ───────────────
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Speed_UI
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Electron app (Linux)
+        run: npm run build:linux
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: ea-showcase-linux
+          path: dist/*.AppImage
+          if-no-files-found: warn
