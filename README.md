@@ -2,6 +2,8 @@
 
 A desktop application showcasing [Eä](https://github.com/petlukk/E-), the SIMD kernel language, with real benchmark comparisons against NumPy and OpenCV.
 
+![Eä Performance Showcase UI](screenshot.JPG)
+
 ## Download & Install (Windows)
 
 1. Download `Ea-Showcase-1.0.0-win-x64.zip` from [Releases](https://github.com/petlukk/Ea_showcase/releases)
